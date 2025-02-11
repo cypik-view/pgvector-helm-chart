@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: pgvector
+  template:
+    metadata:
+      labels:
+        app: pgvector
+    spec:
+      containers:
+        - name: pgvector
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POSTGRES_DB
+              value: "{{ .Values.env.POSTGRES_DB }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.env.POSTGRES_USER }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.env.POSTGRES_PASSWORD }}"
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: "{{ .Values.env.POSTGRES_HOST_AUTH_METHOD }}"
+            - name: VIEW_ACCOUNT_GUID
+              value: "{{ .Values.env.VIEW_ACCOUNT_GUID }}"
+            - name: VIEW_DATABASE_TYPE
+              value: "{{ .Values.env.VIEW_DATABASE_TYPE }}"
+            - name: VIEW_DATABASE_FILE
+              value: "{{ .Values.env.VIEW_DATABASE_FILE }}"
+            - name: VIEW_DATABASE_HOST
+              value: "{{ .Values.env.VIEW_DATABASE_HOST }}"
+            - name: VIEW_DATABASE_PORT
+              value: "{{ .Values.env.VIEW_DATABASE_PORT }}"
+            - name: VIEW_DATABASE_NAME
+              value: "{{ .Values.env.VIEW_DATABASE_NAME }}"
+            - name: VIEW_DATABASE_USER
+              value: "{{ .Values.env.VIEW_DATABASE_USER }}"
+            - name: VIEW_DATABASE_PASS
+              value: "{{ .Values.env.VIEW_DATABASE_PASS }}"
+            - name: VIEW_CONSOLE_LOGGING
+              value: "{{ .Values.env.VIEW_CONSOLE_LOGGING }}"
+            - name: VIEW_CONTROL_HOSTNAME
+              value: "{{ .Values.env.VIEW_CONTROL_HOSTNAME }}"
+            - name: VIEW_CONTROL_PORT
+              value: "{{ .Values.env.VIEW_CONTROL_PORT }}"
+            - name: VIEW_CONTROL_SSL
+              value: "{{ .Values.env.VIEW_CONTROL_SSL }}"
+            - name: VIEW_CONTROL_SWVERSION
+              value: "{{ .Values.env.VIEW_CONTROL_SWVERSION }}"
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/init.sql
+              name: pgvector-config
+              subPath: init.sql
+            - mountPath: /var/lib/postgresql/data
+              name: pgvector-storage
+      volumes:
+        - name: pgvector-config
+          configMap:
+            name: pgvector-config
+            items:
+              - key: init.sql
+                path: init.sql
+        - name: pgvector-storage
+          persistentVolumeClaim:
+            claimName: pgvector-pvc

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pgvector-config
+  name: {{ .Release.Name }}-config
 data:
   init.sql: |
     -- Create user

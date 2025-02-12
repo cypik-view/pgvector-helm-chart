@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  pgvector:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-02-12T10:39:33.689034282+05:30"
+    description: A Helm chart for Kubernetes
+    digest: 17f290696c89d4f8c8e44a714a0797857506df06e2f1850323909c3a7d0cbea5
+    name: pgvector
+    type: application
+    urls:
+    - pgvector-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-02-12T10:39:33.686568813+05:30"

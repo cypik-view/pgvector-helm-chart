@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -30,10 +30,10 @@ spec:
       volumes:
         - name: pgvector-config
           configMap:
-            name: {{ .Release.Name }}-config
+            name: {{ .Chart.Name }}-config
             items:
                 - key: init.sql
                   path: init.sql
         - name: pgvector-storage
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-pvc
+            claimName: {{ .Chart.Name }}-pvc
